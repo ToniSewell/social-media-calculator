@@ -46,12 +46,6 @@ export default function RecencyPage() {
 
   return (
     <PageLayout className="likes-page">
-      <UserSection
-        title="User"
-        name="Mo"
-        imgSrc={process.env.PUBLIC_URL + '/profile_pic.png'}
-        bio="Mo enjoys doing drawing and painting in his free time. He plays the flute in the school band and is a massive fan of Selena Swift!"
-      />
 
       {/* Middle Column */}
       <div className="column card builder-section">
