@@ -25,12 +25,6 @@ export default function LikesPage() {
 
   return (
     <PageLayout className="likes-page">
-      <UserSection
-        title="User"
-        name="Mo"
-        imgSrc={process.env.PUBLIC_URL + '/profile_pic.png'}
-        bio="Mo enjoys doing drawing and painting in his free time. He plays the flute in the school band and is a massive fan of Selena Swift!"
-      />
 
       <ColumnCard title="Algorithm Builder: Likes" className="builder-section">
         <LikesCalculator

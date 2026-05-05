@@ -36,12 +36,6 @@ export default function FollowPosterPage() {
 
   return (
     <PageLayout className="likes-page follow-poster-page">
-      <UserSection
-        title="User"
-        name="Mo"
-        imgSrc={process.env.PUBLIC_URL + '/profile_pic.png'}
-        bio="Mo enjoys doing drawing and painting in his free time. He plays the flute in the school band and is a massive fan of Selena Swift!"
-      />
 
       <ColumnCard title="Algorithm Builder: Follow Poster" className="builder-section">
         <div className="input-block">
