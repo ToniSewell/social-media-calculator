@@ -2,52 +2,46 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LikesPage.css'; // Reuse styles from LikesPage
 import PageLayout from './components/PageLayout';
-import UserSection from './components/UserSection';
 import ColumnCard from './components/ColumnCard';
+
+const defaultWeights = {
+  likes: 5,
+  followsPoster: 5,
+  hashtags: 5,
+  followerLikes: 5,
+  recency: 5,
+  paid: 5,
+};
 
 export default function FollowPosterPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get score from Likes page
   const likesScore = location.state?.likesScore || 0;
+  const weights = location.state?.weights || defaultWeights;
+  const currentPost = location.state?.postNumber || 1;
 
   const [score2, setScore2] = useState(0);
   const [score3, setScore3] = useState(0);
   const [score4, setScore4] = useState(0);
+  const [followsPoster, setFollowsPoster] = useState(null);
+  const [showToast, setShowToast] = useState(false);
 
   const finalScore = likesScore + score2 + score3 + score4;
 
-  const [weight, setWeight] = useState(0);
-  const [followsPoster, setFollowsPoster] = useState(null);
-  const [showToast, setShowToast] = useState(false);
-  const [currentView, setCurrentView] = useState('bio');
-
-  const toggleView = () => {
-    setCurrentView((prev) => (prev === 'bio' ? 'post' : 'bio'));
-  };
-
   useEffect(() => {
     const binary = followsPoster === 'yes' ? 1 : 0;
-    const calcScore = (weight / 10) * binary;
+    const calcScore = (weights.followsPoster / 10) * binary;
     setScore2(calcScore);
     if (followsPoster !== null) setShowToast(true);
-  }, [weight, followsPoster]);
+  }, [weights.followsPoster, followsPoster]);
 
   return (
     <PageLayout className="likes-page follow-poster-page">
-
-      <ColumnCard title="Algorithm Builder: Follow Poster" className="builder-section">
+      <ColumnCard title={`Post ${currentPost}: Follow Poster`} className="builder-section">
         <div className="input-block">
-          <h3>1. Choose a weight (0–10):</h3>
-          <input
-            type="range"
-            min="0"
-            max="10"
-            value={weight}
-            onChange={(e) => setWeight(Number(e.target.value))}
-          />
-          <div>Importance: {weight}/10</div>
+          <h3>1. Importance weight for following the poster</h3>
+          <div>Importance: {weights.followsPoster}/10</div>
         </div>
 
         <div className="input-block">
@@ -80,7 +74,7 @@ export default function FollowPosterPage() {
           <h3>3. Calculated Score:</h3>
           <div className="score-breakdown">
             <span className="fraction">
-              <span className="boxed">{weight}</span>
+              <span className="boxed">{weights.followsPoster}</span>
               <span className="line"></span>
               <span>10</span>
             </span>
@@ -100,14 +94,9 @@ export default function FollowPosterPage() {
         <p>3. ... = <strong>{score3.toFixed(2)}</strong></p>
         <p className="plus">+</p>
         <p>4. ... = <strong>{score4.toFixed(2)}</strong></p>
-        <p className="plus">+</p>
-        <p>5. ... = <strong>{score4.toFixed(2)}</strong></p>
-        <p className="plus">+</p>
-        <p>6. ... = <strong>{score4.toFixed(2)}</strong></p>
         <h3>Final Score: <span className="final-score">{finalScore.toFixed(2)}</span></h3>
       </ColumnCard>
 
-      {/* Toast */}
       {showToast && (
         <div className="toast" role="alert" aria-live="polite">
           <p>
@@ -118,7 +107,12 @@ export default function FollowPosterPage() {
             className="next-button"
             onClick={() =>
               navigate('/hashtags', {
-                state: { likesScore, followScore: score2 },
+                state: {
+                  likesScore,
+                  followScore: score2,
+                  weights,
+                  postNumber: currentPost,
+                },
               })
             }
           >

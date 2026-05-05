@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LikesPage.css';
-import UserSection from './components/UserSection';
 import PageLayout from './components/PageLayout';
+
+const defaultWeights = {
+  likes: 5,
+  followsPoster: 5,
+  hashtags: 5,
+  followerLikes: 5,
+  recency: 5,
+  paid: 5,
+};
   
 export default function FollowHashtagsPage() {
   const location = useLocation();
@@ -10,55 +18,48 @@ export default function FollowHashtagsPage() {
 
   const likesScore = location.state?.likesScore || 0;
   const followScore = location.state?.followScore || 0;
+  const weights = location.state?.weights || defaultWeights;
+  const currentPost = location.state?.postNumber || 1;
 
   const [hashtagScore, setHashtagScore] = useState(0);
   const [score4, setScore4] = useState(0); // Placeholder for future use
   const [numHashtagsFollowed, setNumHashtagsFollowed] = useState(0);
-  const [weight, setWeight] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const finalScore = likesScore + followScore + hashtagScore + score4;
+
+  useEffect(() => {
+    const calcScore = (weights.hashtags / 10) * numHashtagsFollowed;
+    setHashtagScore(calcScore);
+    setShowToast(numHashtagsFollowed > 0);
+  }, [weights.hashtags, numHashtagsFollowed]);
+
+  return (
+    <PageLayout className="likes-page">
  
-   useEffect(() => {
-     const calcScore = (weight / 10) * numHashtagsFollowed;
-     setHashtagScore(calcScore);
-     if (numHashtagsFollowed > 0) setShowToast(true);
-   }, [weight, numHashtagsFollowed]);
- 
-   return (
-     <PageLayout className="likes-page">
- 
-       {/* Middle Column */}
-       <div className="column card builder-section">
-         <h2>Algorithm Builder: Hashtags</h2>
- 
-         <div className="input-block">
-           <h3>1. Choose a weight (0–10):</h3>
-           <input
-             type="range"
-             min="0"
-             max="10"
-             value={weight}
-             onChange={(e) => setWeight(Number(e.target.value))}
-           />
-           <div>Importance: {weight}/10</div>
-         </div>
- 
-         <div className="input-block">
-           <h3>2. How many hashtags does the user follow from the post?</h3>
-           <input
-             type="number"
-             min="0"
-             max="10"
-             value={numHashtagsFollowed}
-             onChange={(e) => setNumHashtagsFollowed(Number(e.target.value))}
-           />
-         </div>
- 
-         <div className="score-display">
-           <h3>3. Calculated Score:</h3>
-           <div className="score-breakdown">
-             <span className="fraction">
-               <span className="boxed">{weight}</span>
+<div className="column card builder-section">
+        <h2>Post {currentPost}: Algorithm Builder - Hashtags</h2>
+
+        <div className="input-block">
+          <h3>1. Importance weight for hashtags</h3>
+          <div>Importance: {weights.hashtags}/10</div>
+        </div>
+
+        <div className="input-block">
+          <h3>2. How many hashtags does the user follow from the post?</h3>
+          <input
+            type="number"
+            min="0"
+            max="10"
+            value={numHashtagsFollowed}
+            onChange={(e) => setNumHashtagsFollowed(Number(e.target.value))}
+          />
+        </div>
+
+        <div className="score-display">
+          <h3>3. Calculated Score:</h3>
+          <div className="score-breakdown">
+            <span className="fraction">
+              <span className="boxed">{weights.hashtags}</span>
                <span className="line"></span>
                <span>10</span>
              </span>
@@ -98,7 +99,13 @@ export default function FollowHashtagsPage() {
              className="next-button"
              onClick={() =>
                navigate('/liked-by-followed-users', {
-                 state: { likesScore, followScore, hashtagScore },
+                 state: {
+                   likesScore,
+                   followScore,
+                   hashtagScore,
+                   weights,
+                   postNumber: currentPost,
+                 },
                })
              }
            >

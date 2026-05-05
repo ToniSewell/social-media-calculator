@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './LikesPage.css';
 import PageLayout from './components/PageLayout';
-import UserSection from './components/UserSection';
+
+const defaultWeights = {
+  likes: 5,
+  followsPoster: 5,
+  hashtags: 5,
+  followerLikes: 5,
+  recency: 5,
+  paid: 5,
+};
 
 export default function PaidPromotionPage() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const likesScore = location.state?.likesScore || 0;
   const followScore = location.state?.followScore || 0;
-  const hashtagScore = location.state?.hashtag_score || 0;
+  const hashtagScore = location.state?.hashtagScore || 0;
   const followerLikeScore = location.state?.followerLikeScore || 0;
   const recencyScore = location.state?.recencyScore || 0;
+  const weights = location.state?.weights || defaultWeights;
+  const currentPost = location.state?.postNumber || 1;
 
   const [paidScore, setPaidScore] = useState(0);
   const [isPromoted, setIsPromoted] = useState(null);
@@ -22,19 +33,24 @@ export default function PaidPromotionPage() {
 
   useEffect(() => {
     if (isPromoted === null) return;
-    setPaidScore(isPromoted === 'yes' ? 10 : 0);
+    setPaidScore(isPromoted === 'yes' ? weights.paid : 0);
     setShowToast(true);
-  }, [isPromoted]);
+  }, [isPromoted, weights.paid]);
 
   return (
     <PageLayout className="likes-page">
 
       {/* Middle Column */}
       <div className="column card builder-section">
-        <h2>Algorithm Builder</h2>
+        <h2>Post {currentPost}: Algorithm Builder - Paid Promotion</h2>
 
         <div className="input-block">
-          <h3>1. Has the content paid to be promoted?</h3>
+          <h3>1. Importance weight for paid promotion</h3>
+          <div>Importance: {weights.paid}/10</div>
+        </div>
+
+        <div className="input-block">
+          <h3>2. Has the content paid to be promoted?</h3>
           <div className="radio-group">
             <label>
               <input
@@ -44,7 +60,7 @@ export default function PaidPromotionPage() {
                 checked={isPromoted === 'yes'}
                 onChange={() => setIsPromoted('yes')}
               />
-              Yes (+10 points)
+              Yes
             </label>
             <label>
               <input
@@ -54,15 +70,15 @@ export default function PaidPromotionPage() {
                 checked={isPromoted === 'no'}
                 onChange={() => setIsPromoted('no')}
               />
-              No (0 points)
+              No
             </label>
           </div>
         </div>
 
         <div className="score-display">
-          <h3>2. Calculated Score:</h3>
+          <h3>3. Calculated Score:</h3>
           <div className="score-breakdown">
-            <strong>{paidScore} points</strong>
+            <strong>{paidScore.toFixed(2)} points</strong>
           </div>
         </div>
       </div>
@@ -90,13 +106,20 @@ export default function PaidPromotionPage() {
         <div className="toast" role="alert" aria-live="polite">
           <p>
             You’ve calculated the final score! 🎉<br />
-            You can now use this to rank content.
+            Use the same weights for the next post.
           </p>
           <button
             className="next-button"
-            onClick={() => setShowToast(false)}
+            onClick={() =>
+              navigate('/likes', {
+                state: {
+                  weights,
+                  postNumber: currentPost + 1,
+                },
+              })
+            }
           >
-            Finish
+            Next Post →
           </button>
         </div>
       )}

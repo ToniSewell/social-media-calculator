@@ -4,6 +4,15 @@ import './LikesPage.css'; // reuse existing styles
 import PageLayout from './components/PageLayout';
 import UserSection from './components/UserSection';
 
+const defaultWeights = {
+  likes: 5,
+  followsPoster: 5,
+  hashtags: 5,
+  followerLikes: 5,
+  recency: 5,
+  paid: 5,
+};
+
 export default function FollowedUserLikedPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -11,11 +20,12 @@ export default function FollowedUserLikedPage() {
   const likesScore = location.state?.likesScore || 0;
   const followScore = location.state?.followScore || 0;
   const hashtagScore = location.state?.hashtagScore || 0;
+  const weights = location.state?.weights || defaultWeights;
+  const currentPost = location.state?.postNumber || 1;
 
   const [followerLikeScore, setFollowerLikeScore] = useState(0);
   const [score5, setScore5] = useState(0); // placeholder
   const [numUsers, setNumUsers] = useState(0);
-  const [weight, setWeight] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [currentView, setCurrentView] = useState('bio');
 
@@ -26,10 +36,10 @@ export default function FollowedUserLikedPage() {
   };
 
   useEffect(() => {
-    const calcScore = (weight / 10) * numUsers;
+    const calcScore = (weights.followerLikes / 10) * numUsers;
     setFollowerLikeScore(calcScore);
     setShowToast(numUsers > 0);
-  }, [weight, numUsers]);
+  }, [weights.followerLikes, numUsers]);
 
   return (
     <PageLayout className="likes-page">
@@ -37,17 +47,10 @@ export default function FollowedUserLikedPage() {
 
       {/* Middle Column */}
       <div className="column card builder-section">
-        <h2>Algorithm Builder</h2>
+        <h2>Post {currentPost}: Algorithm Builder</h2>
         <div className="input-block">
-          <h3>1. Choose a weight (0–10):</h3>
-          <input
-            type="range"
-            min="0"
-            max="10"
-            value={weight}
-            onChange={(e) => setWeight(Number(e.target.value))}
-          />
-          <div>Importance: {weight}/10</div>
+          <h3>1. Importance weight for followed-user likes</h3>
+          <div>Importance: {weights.followerLikes}/10</div>
         </div>
 
         <div className="input-block">
@@ -66,7 +69,7 @@ export default function FollowedUserLikedPage() {
           <h3>3. Calculated Score:</h3>
           <div className="score-breakdown">
             <span className="fraction">
-              <span className="boxed">{weight}</span>
+              <span className="boxed">{weights.followerLikes}</span>
               <span className="line"></span>
               <span>10</span>
             </span>
@@ -111,6 +114,8 @@ export default function FollowedUserLikedPage() {
                   followScore,
                   hashtagScore,
                   followerLikeScore,
+                  weights,
+                  postNumber: currentPost,
                 },
               })
             }

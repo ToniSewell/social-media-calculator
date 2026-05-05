@@ -4,6 +4,15 @@ import './LikesPage.css'; // reuse shared styles
 import PageLayout from './components/PageLayout';
 import UserSection from './components/UserSection';
 
+const defaultWeights = {
+  likes: 5,
+  followsPoster: 5,
+  hashtags: 5,
+  followerLikes: 5,
+  recency: 5,
+  paid: 5,
+};
+
 export default function RecencyPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,9 +21,10 @@ export default function RecencyPage() {
   const followScore = location.state?.followScore || 0;
   const hashtagScore = location.state?.hashtagScore || 0;
   const followerLikeScore = location.state?.followerLikeScore || 0;
+  const weights = location.state?.weights || defaultWeights;
+  const currentPost = location.state?.postNumber || 1;
 
   const [recencyScore, setRecencyScore] = useState(0);
-  const [weight, setWeight] = useState(0);
   const [minutesAgo, setMinutesAgo] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [currentView, setCurrentView] = useState('bio');
@@ -29,10 +39,10 @@ export default function RecencyPage() {
 
   // let's edit this to be correct
   useEffect(() => {
-    const calcScore = -(weight / 10) * minutesAgo;
+    const calcScore = -(weights.recency / 10) * minutesAgo;
     setRecencyScore(calcScore);
-    if (minutesAgo > 0) setShowToast(true);
-  }, [weight, minutesAgo]);
+    setShowToast(minutesAgo > 0);
+  }, [weights.recency, minutesAgo]);
 
   return (
     <PageLayout className="likes-page">
@@ -45,18 +55,11 @@ export default function RecencyPage() {
 
       {/* Middle Column */}
       <div className="column card builder-section">
-        <h2>Algorithm Builder</h2>
+        <h2>Post {currentPost}: Algorithm Builder - Recency</h2>
 
         <div className="input-block">
-          <h3>1. Choose a weight (0–10):</h3>
-          <input
-            type="range"
-            min="0"
-            max="10"
-            value={weight}
-            onChange={(e) => setWeight(Number(e.target.value))}
-          />
-          <div>Importance: {weight}/10</div>
+          <h3>1. Importance weight for recency</h3>
+          <div>Importance: {weights.recency}/10</div>
         </div>
 
         <div className="input-block">
@@ -75,7 +78,7 @@ export default function RecencyPage() {
           <div className="score-breakdown">
             <span>( - </span>
             <span className="fraction">
-              <span className="boxed">{weight}</span>
+              <span className="boxed">{weights.recency}</span>
               <span className="line"></span>
               <span>10</span>
             </span>
@@ -119,7 +122,9 @@ export default function RecencyPage() {
                   followScore,
                   hashtagScore,
                   followerLikeScore,
-                  recencyScore
+                  recencyScore,
+                  weights,
+                  postNumber: currentPost,
                 }
               })
             }
