@@ -20,6 +20,7 @@ export default function FollowPosterPage() {
   const likesScore = location.state?.likesScore || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
+  const postHistory = location.state?.postHistory || [];
 
   const [score2, setScore2] = useState(0);
   const [score3, setScore3] = useState(0);
@@ -112,6 +113,7 @@ export default function FollowPosterPage() {
                   followScore: score2,
                   weights,
                   postNumber: currentPost,
+                  postHistory,
                 },
               })
             }

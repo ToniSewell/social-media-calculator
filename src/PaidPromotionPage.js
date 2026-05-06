@@ -23,6 +23,7 @@ export default function PaidPromotionPage() {
   const recencyScore = location.state?.recencyScore || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
+  const currentPostHistory = location.state?.postHistory || [];
 
   const [paidScore, setPaidScore] = useState(0);
   const [isPromoted, setIsPromoted] = useState(null);
@@ -110,14 +111,19 @@ export default function PaidPromotionPage() {
           </p>
           <button
             className="next-button"
-            onClick={() =>
+            onClick={() => {
+              const newPostHistory = [
+                ...currentPostHistory,
+                { post: currentPost, score: finalScore },
+              ];
               navigate('/likes', {
                 state: {
                   weights,
                   postNumber: currentPost + 1,
+                  postHistory: newPostHistory,
                 },
-              })
-            }
+              });
+            }}
           >
             Next Post →
           </button>

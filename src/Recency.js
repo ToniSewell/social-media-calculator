@@ -23,6 +23,7 @@ export default function RecencyPage() {
   const followerLikeScore = location.state?.followerLikeScore || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
+  const postHistory = location.state?.postHistory || [];
 
   const [recencyScore, setRecencyScore] = useState(0);
   const [minutesAgo, setMinutesAgo] = useState(0);
@@ -119,6 +120,7 @@ export default function RecencyPage() {
                   recencyScore,
                   weights,
                   postNumber: currentPost,
+                  postHistory,
                 }
               })
             }

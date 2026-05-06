@@ -20,12 +20,14 @@ export default function LikesPage() {
 
   const initialWeights = location.state?.weights || defaultWeights;
   const initialPostNumber = location.state?.postNumber || 1;
+  const initialPostHistory = location.state?.postHistory || [];
 
   const [weights, setWeights] = useState(initialWeights);
   const [weightsSet, setWeightsSet] = useState(Boolean(location.state?.weights));
   const [likesScore, setLikesScore] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [currentPost, setCurrentPost] = useState(initialPostNumber);
+  const [postHistory, setPostHistory] = useState(initialPostHistory);
 
   const finalScore = likesScore;
 
@@ -45,14 +47,34 @@ export default function LikesPage() {
       setWeights(location.state.weights);
       setWeightsSet(true);
     }
+    if (location.state?.postHistory) {
+      setPostHistory(location.state.postHistory);
+    }
   }, [location.state]);
 
   const updateWeight = (factor, value) => {
     setWeights((prev) => ({ ...prev, [factor]: Number(value) }));
   };
 
+  const scoreRail = (
+    <ColumnCard title="Rated Posts" className="history-rail">
+      {postHistory.length > 0 ? (
+        <ul className="score-list">
+          {postHistory.map((item, index) => (
+            <li key={index}>
+              <span>Post {item.post}</span>
+              <strong>{item.score.toFixed(2)}</strong>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="empty-rail">No posts rated yet.</p>
+      )}
+    </ColumnCard>
+  );
+
   return (
-    <PageLayout className="likes-page">
+    <PageLayout className="likes-page" sidebar={scoreRail}>
       <div className="page-header">
         <h2>Post {currentPost}</h2>
       </div>
@@ -115,6 +137,7 @@ export default function LikesPage() {
                       likesScore,
                       weights,
                       postNumber: currentPost,
+                      postHistory,
                     },
                   })
                 }

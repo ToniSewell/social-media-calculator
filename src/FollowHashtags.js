@@ -20,6 +20,7 @@ export default function FollowHashtagsPage() {
   const followScore = location.state?.followScore || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
+  const postHistory = location.state?.postHistory || [];
 
   const [hashtagScore, setHashtagScore] = useState(0);
   const [score4, setScore4] = useState(0); // Placeholder for future use
@@ -105,6 +106,7 @@ export default function FollowHashtagsPage() {
                    hashtagScore,
                    weights,
                    postNumber: currentPost,
+                   postHistory,
                  },
                })
              }

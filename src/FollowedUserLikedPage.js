@@ -22,6 +22,7 @@ export default function FollowedUserLikedPage() {
   const hashtagScore = location.state?.hashtagScore || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
+  const postHistory = location.state?.postHistory || [];
 
   const [followerLikeScore, setFollowerLikeScore] = useState(0);
   const [score5, setScore5] = useState(0); // placeholder
@@ -116,6 +117,7 @@ export default function FollowedUserLikedPage() {
                   followerLikeScore,
                   weights,
                   postNumber: currentPost,
+                  postHistory,
                 },
               })
             }
