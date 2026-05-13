@@ -24,6 +24,7 @@ function App() {
           <Route path="/liked-by-followed-users" element={<FollowedUserLikedPage />} />
           <Route path="/recency" element={<RecencyPage />} />
           <Route path="/paid-promotion" element={<PaidPromotionPage />} />
+          <Route path="*" element={<LikesPage />} />
         </Routes>
       </Layout>
     </Router>
