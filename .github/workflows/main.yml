@@ -1,4 +1,4 @@
-name: Sync gh-pages with main
+name: Build and deploy to gh-pages
 on:
   push:
     branches: [ main ]
@@ -8,11 +8,20 @@ permissions:
   contents: write
 
 jobs:
-  sync:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update gh-pages to the latest main
-        run: |
-          # Point gh-pages at the current commit on main
-          git push -f origin HEAD:gh-pages
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build   # should produce ./dist (change publish_dir if different)
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: dist   # change to your build output folder (e.g. build)
+          force_orphan: true
