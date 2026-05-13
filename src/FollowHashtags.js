@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LikesPage.css';
 import PageLayout from './components/PageLayout';
+import HistoryRail from './components/HistoryRail';
 
 const defaultWeights = {
   likes: 5,
@@ -38,7 +39,7 @@ export default function FollowHashtagsPage() {
   }, [weights.hashtags, numHashtagsFollowed, hasInput]);
 
   return (
-    <PageLayout className="likes-page">
+    <PageLayout className="likes-page" sidebar={<HistoryRail postHistory={postHistory} weights={weights} />}>
  
 <div className="column card builder-section">
         <h2>Post {currentPost}: Algorithm Builder - Hashtags</h2>

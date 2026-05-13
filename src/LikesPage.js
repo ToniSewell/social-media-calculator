@@ -4,6 +4,7 @@ import { LikesCalculator } from './LikesCalculator';
 import './LikesPage.css';
 import PageLayout from './components/PageLayout';
 import ColumnCard from './components/ColumnCard';
+import HistoryRail from './components/HistoryRail';
 
 const defaultWeights = {
   likes: 5,
@@ -83,25 +84,8 @@ export default function LikesPage() {
     );
   };
 
-  const scoreRail = (
-    <ColumnCard title="Rated Posts" className="history-rail">
-      {postHistory.length > 0 ? (
-        <ul className="score-list">
-          {postHistory.map((item, index) => (
-            <li key={index}>
-              <span>Post {item.post}</span>
-              <strong>{scorePost(item, weights).toFixed(2)}</strong>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="empty-rail">No posts rated yet.</p>
-      )}
-    </ColumnCard>
-  );
-
   return (
-    <PageLayout className="likes-page" sidebar={scoreRail}>
+    <PageLayout className="likes-page" sidebar={<HistoryRail postHistory={postHistory} weights={weights} />}>
       <div className="page-header">
         <h2>Post {currentPost}</h2>
       </div>

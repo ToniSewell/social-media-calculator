@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LikesPage.css'; // reuse shared styles
 import PageLayout from './components/PageLayout';
+import HistoryRail from './components/HistoryRail';
 import UserSection from './components/UserSection';
 
 const defaultWeights = {
@@ -51,7 +52,7 @@ export default function RecencyPage() {
   }, [weights.recency, minutesAgo, hasInput]);
 
   return (
-    <PageLayout className="likes-page">
+    <PageLayout className="likes-page" sidebar={<HistoryRail postHistory={postHistory} weights={weights} />}>
 
       {/* Middle Column */}
       <div className="column card builder-section">

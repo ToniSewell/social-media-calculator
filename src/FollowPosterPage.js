@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './LikesPage.css'; // Reuse styles from LikesPage
 import PageLayout from './components/PageLayout';
 import ColumnCard from './components/ColumnCard';
+import HistoryRail from './components/HistoryRail';
 
 const defaultWeights = {
   likes: 5,
@@ -39,7 +40,7 @@ export default function FollowPosterPage() {
   }, [weights.followsPoster, followsPoster]);
 
   return (
-    <PageLayout className="likes-page follow-poster-page">
+    <PageLayout className="likes-page follow-poster-page" sidebar={<HistoryRail postHistory={postHistory} weights={weights} />}>
       <ColumnCard title={`Post ${currentPost}: Follow Poster`} className="builder-section">
         <div className="input-block">
           <h3>1. Importance weight for following the poster</h3>
