@@ -18,6 +18,7 @@ export default function FollowPosterPage() {
   const navigate = useNavigate();
 
   const likesScore = location.state?.likesScore || 0;
+  const likes = location.state?.likes || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
   const postHistory = location.state?.postHistory || [];
@@ -109,7 +110,9 @@ export default function FollowPosterPage() {
             onClick={() =>
               navigate('/hashtags', {
                 state: {
+                  likes,
                   likesScore,
+                  followsPoster: followsPoster === 'yes',
                   followScore: score2,
                   weights,
                   postNumber: currentPost,

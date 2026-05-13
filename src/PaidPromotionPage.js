@@ -16,11 +16,16 @@ export default function PaidPromotionPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const likes = location.state?.likes || 0;
   const likesScore = location.state?.likesScore || 0;
+  const followsPoster = location.state?.followsPoster || false;
   const followScore = location.state?.followScore || 0;
   const hashtagScore = location.state?.hashtagScore || 0;
   const followerLikeScore = location.state?.followerLikeScore || 0;
+  const followerLikes = location.state?.followerLikes || 0;
+  const hashtagsFollowed = location.state?.hashtagsFollowed || 0;
   const recencyScore = location.state?.recencyScore || 0;
+  const recencyDays = location.state?.recencyDays || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
   const currentPostHistory = location.state?.postHistory || [];
@@ -114,7 +119,20 @@ export default function PaidPromotionPage() {
             onClick={() => {
               const newPostHistory = [
                 ...currentPostHistory,
-                { post: currentPost, score: finalScore },
+                {
+                  post: currentPost,
+                  likes,
+                  followsPoster,
+                  followScore,
+                  hashtagScore,
+                  hashtagsFollowed,
+                  followerLikeScore,
+                  followerLikes,
+                  recencyScore,
+                  recencyDays,
+                  paidPromotion: isPromoted === 'yes',
+                  score: finalScore,
+                },
               ];
               navigate('/likes', {
                 state: {

@@ -16,7 +16,9 @@ export default function FollowHashtagsPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const likes = location.state?.likes || 0;
   const likesScore = location.state?.likesScore || 0;
+  const followsPoster = location.state?.followsPoster || false;
   const followScore = location.state?.followScore || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
@@ -105,9 +107,12 @@ export default function FollowHashtagsPage() {
              onClick={() =>
                navigate('/liked-by-followed-users', {
                  state: {
+                   likes,
                    likesScore,
+                   followsPoster,
                    followScore,
                    hashtagScore,
+                   hashtagsFollowed: numHashtagsFollowed,
                    weights,
                    postNumber: currentPost,
                    postHistory,

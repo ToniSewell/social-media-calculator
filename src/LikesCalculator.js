@@ -8,7 +8,7 @@ export function LikesCalculator({ weight = 0, onScoreChange }) {
   useEffect(() => {
     const calcScore = likes === null ? 0 : (weight / 10) * likes;
     setScore(calcScore);
-    onScoreChange(calcScore, likes !== null);
+    onScoreChange(calcScore, likes !== null, likes === null ? 0 : likes);
   }, [weight, likes, onScoreChange]);
 
   return (

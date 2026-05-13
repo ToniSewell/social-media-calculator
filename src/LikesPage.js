@@ -25,6 +25,7 @@ export default function LikesPage() {
   const [weights, setWeights] = useState(initialWeights);
   const [weightsSet, setWeightsSet] = useState(Boolean(location.state?.weights));
   const [likesScore, setLikesScore] = useState(0);
+  const [likesRaw, setLikesRaw] = useState(0);
   const [likesValid, setLikesValid] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [currentPost, setCurrentPost] = useState(initialPostNumber);
@@ -53,6 +54,35 @@ export default function LikesPage() {
     setWeights((prev) => ({ ...prev, [factor]: Number(value) }));
   };
 
+  const scorePost = (item, weights) => {
+    if (
+      item.likes == null &&
+      item.followsPoster == null &&
+      item.hashtagsFollowed == null &&
+      item.followerLikes == null &&
+      item.recencyDays == null &&
+      item.paidPromotion == null
+    ) {
+      return item.score ?? 0;
+    }
+
+    const likes = item.likes ?? 0;
+    const followsPoster = item.followsPoster ? 1 : 0;
+    const hashtags = item.hashtagsFollowed ?? 0;
+    const followerLikes = item.followerLikes ?? 0;
+    const recency = item.recencyDays ?? 0;
+    const paid = item.paidPromotion ? weights.paid : 0;
+
+    return (
+      (weights.likes / 10) * likes +
+      (weights.followsPoster / 10) * followsPoster +
+      (weights.hashtags / 10) * hashtags +
+      (weights.followerLikes / 10) * followerLikes +
+      -(weights.recency / 10) * recency +
+      paid
+    );
+  };
+
   const scoreRail = (
     <ColumnCard title="Rated Posts" className="history-rail">
       {postHistory.length > 0 ? (
@@ -60,7 +90,7 @@ export default function LikesPage() {
           {postHistory.map((item, index) => (
             <li key={index}>
               <span>Post {item.post}</span>
-              <strong>{item.score.toFixed(2)}</strong>
+              <strong>{scorePost(item, weights).toFixed(2)}</strong>
             </li>
           ))}
         </ul>
@@ -104,8 +134,9 @@ export default function LikesPage() {
             <p>Using the saved weight: {weights.likes}/10 for likes.</p>
             <LikesCalculator
               weight={weights.likes}
-              onScoreChange={(score, valid) => {
+              onScoreChange={(score, valid, rawLikes) => {
                 setLikesScore(score);
+                setLikesRaw(rawLikes);
                 setLikesValid(valid);
               }}
             />

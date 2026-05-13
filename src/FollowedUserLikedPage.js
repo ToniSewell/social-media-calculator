@@ -17,9 +17,12 @@ export default function FollowedUserLikedPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const likes = location.state?.likes || 0;
   const likesScore = location.state?.likesScore || 0;
+  const followsPoster = location.state?.followsPoster || false;
   const followScore = location.state?.followScore || 0;
   const hashtagScore = location.state?.hashtagScore || 0;
+  const hashtagsFollowed = location.state?.hashtagsFollowed || 0;
   const weights = location.state?.weights || defaultWeights;
   const currentPost = location.state?.postNumber || 1;
   const postHistory = location.state?.postHistory || [];
@@ -115,10 +118,14 @@ export default function FollowedUserLikedPage() {
             onClick={() =>
               navigate('/recency', {
                 state: {
+                  likes,
                   likesScore,
+                  followsPoster,
                   followScore,
                   hashtagScore,
+                  hashtagsFollowed,
                   followerLikeScore,
+                  followerLikes: numUsers,
                   weights,
                   postNumber: currentPost,
                   postHistory,
