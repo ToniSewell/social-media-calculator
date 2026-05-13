@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './LikesCalculator.css';
 
 export function LikesCalculator({ weight = 0, onScoreChange }) {
-  const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(null);
   const [score, setScore] = useState(0);
 
   useEffect(() => {
-    const calcScore = (weight / 10) * likes;
+    const calcScore = likes === null ? 0 : (weight / 10) * likes;
     setScore(calcScore);
-    onScoreChange(calcScore);
+    onScoreChange(calcScore, likes !== null);
   }, [weight, likes, onScoreChange]);
 
   return (

@@ -27,6 +27,7 @@ export default function FollowedUserLikedPage() {
   const [followerLikeScore, setFollowerLikeScore] = useState(0);
   const [score5, setScore5] = useState(0); // placeholder
   const [numUsers, setNumUsers] = useState(0);
+  const [hasInput, setHasInput] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [currentView, setCurrentView] = useState('bio');
 
@@ -39,8 +40,8 @@ export default function FollowedUserLikedPage() {
   useEffect(() => {
     const calcScore = (weights.followerLikes / 10) * numUsers;
     setFollowerLikeScore(calcScore);
-    setShowToast(numUsers > 0);
-  }, [weights.followerLikes, numUsers]);
+    setShowToast(hasInput);
+  }, [weights.followerLikes, numUsers, hasInput]);
 
   return (
     <PageLayout className="likes-page">
@@ -61,7 +62,10 @@ export default function FollowedUserLikedPage() {
             min="0"
             max="10"
             value={numUsers}
-            onChange={(e) => setNumUsers(Number(e.target.value))}
+            onChange={(e) => {
+              setNumUsers(Number(e.target.value));
+              setHasInput(true);
+            }}
             placeholder="Enter number"
           />
         </div>

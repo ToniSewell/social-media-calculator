@@ -27,6 +27,7 @@ export default function RecencyPage() {
 
   const [recencyScore, setRecencyScore] = useState(0);
   const [minutesAgo, setMinutesAgo] = useState(0);
+  const [hasInput, setHasInput] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [currentView, setCurrentView] = useState('bio');
 
@@ -42,8 +43,8 @@ export default function RecencyPage() {
   useEffect(() => {
     const calcScore = -(weights.recency / 10) * minutesAgo;
     setRecencyScore(calcScore);
-    setShowToast(minutesAgo > 0);
-  }, [weights.recency, minutesAgo]);
+    setShowToast(hasInput);
+  }, [weights.recency, minutesAgo, hasInput]);
 
   return (
     <PageLayout className="likes-page">
@@ -64,7 +65,10 @@ export default function RecencyPage() {
             min="0"
             placeholder="Enter number of days"
             value={minutesAgo}
-            onChange={(e) => setMinutesAgo(Number(e.target.value))}
+            onChange={(e) => {
+              setMinutesAgo(Number(e.target.value));
+              setHasInput(true);
+            }}
           />
         </div>
 

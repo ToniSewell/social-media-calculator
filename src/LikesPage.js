@@ -25,6 +25,7 @@ export default function LikesPage() {
   const [weights, setWeights] = useState(initialWeights);
   const [weightsSet, setWeightsSet] = useState(Boolean(location.state?.weights));
   const [likesScore, setLikesScore] = useState(0);
+  const [likesValid, setLikesValid] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [currentPost, setCurrentPost] = useState(initialPostNumber);
   const [postHistory, setPostHistory] = useState(initialPostHistory);
@@ -32,12 +33,8 @@ export default function LikesPage() {
   const finalScore = likesScore;
 
   useEffect(() => {
-    if (likesScore > 0) {
-      setShowToast(true);
-    } else {
-      setShowToast(false);
-    }
-  }, [likesScore]);
+    setShowToast(likesValid);
+  }, [likesValid]);
 
   useEffect(() => {
     if (location.state?.postNumber) {
@@ -105,7 +102,13 @@ export default function LikesPage() {
         <>
           <ColumnCard title="Algorithm Builder: Likes" className="builder-section">
             <p>Using the saved weight: {weights.likes}/10 for likes.</p>
-            <LikesCalculator weight={weights.likes} onScoreChange={setLikesScore} />
+            <LikesCalculator
+              weight={weights.likes}
+              onScoreChange={(score, valid) => {
+                setLikesScore(score);
+                setLikesValid(valid);
+              }}
+            />
           </ColumnCard>
 
           <ColumnCard title="Weights Summary" className="score-section">

@@ -25,14 +25,15 @@ export default function FollowHashtagsPage() {
   const [hashtagScore, setHashtagScore] = useState(0);
   const [score4, setScore4] = useState(0); // Placeholder for future use
   const [numHashtagsFollowed, setNumHashtagsFollowed] = useState(0);
+  const [hasInput, setHasInput] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const finalScore = likesScore + followScore + hashtagScore + score4;
 
   useEffect(() => {
     const calcScore = (weights.hashtags / 10) * numHashtagsFollowed;
     setHashtagScore(calcScore);
-    setShowToast(numHashtagsFollowed > 0);
-  }, [weights.hashtags, numHashtagsFollowed]);
+    setShowToast(hasInput);
+  }, [weights.hashtags, numHashtagsFollowed, hasInput]);
 
   return (
     <PageLayout className="likes-page">
@@ -52,7 +53,10 @@ export default function FollowHashtagsPage() {
             min="0"
             max="10"
             value={numHashtagsFollowed}
-            onChange={(e) => setNumHashtagsFollowed(Number(e.target.value))}
+            onChange={(e) => {
+              setNumHashtagsFollowed(Number(e.target.value));
+              setHasInput(true);
+            }}
           />
         </div>
 
