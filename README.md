@@ -35,10 +35,6 @@ Welcome to the Algorithm Builder, an interactive educational game that teaches y
 Purpose:
 This project is designed to raise awareness and critical thinking around how online content is ranked and recommended, specifically within social media platforms. Players are guided through a series of questions that help them understand how algorithms can use factors like likes, follows, hashtags, recency, and paid promotion to determine what content appears on their feed.
 
-Gameplay Overview:
-Choose Your Profile
-Players begin by selecting a character profile. Each one has unique interests and follows different users and hashtags.
-
 Customize the Algorithm
 The player is presented with a series of questions across different pages, such as:
 
