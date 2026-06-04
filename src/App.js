@@ -1,6 +1,6 @@
 // hi
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import QuestionSelector from "./QuestionSelector";
 import FollowHashtags from "./FollowHashtags";
 import LikesPage from './LikesPage';

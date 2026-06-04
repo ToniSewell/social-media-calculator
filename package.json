@@ -1,6 +1,6 @@
 {
   "name": "recommendation_system",
-  "homepage": "https://tonisewell.github.io/Recommendation-system",
+  "homepage": "https://tonisewell.github.io/social-media-calculator",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
