@@ -4,12 +4,13 @@ import './LikesCalculator.css';
 export function LikesCalculator({ weight = 0, onScoreChange }) {
   const [likes, setLikes] = useState(null);
   const [score, setScore] = useState(0);
+  const normalizedLikes = likes === null ? 0 : Math.log10(1 + likes);
 
   useEffect(() => {
-    const calcScore = likes === null ? 0 : (weight / 10) * likes;
+    const calcScore = likes === null ? 0 : (weight / 10) * normalizedLikes;
     setScore(calcScore);
     onScoreChange(calcScore, likes !== null, likes === null ? 0 : likes);
-  }, [weight, likes, onScoreChange]);
+  }, [weight, likes, normalizedLikes, onScoreChange]);
 
   return (
     <div className="likes-calculator">
@@ -35,7 +36,7 @@ export function LikesCalculator({ weight = 0, onScoreChange }) {
           <span className="bottom">10</span>
         </span>
         <span className="math-symbol">×</span>
-        <span className="boxed">{likes}</span>
+        <span className="boxed">log10(1 + {likes ?? 0})</span>
         <span className="math-symbol">=</span>
         <strong>{score.toFixed(2)}</strong>
       </div>

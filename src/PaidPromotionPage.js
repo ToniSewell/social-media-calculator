@@ -123,6 +123,7 @@ export default function PaidPromotionPage() {
                 {
                   post: currentPost,
                   likes,
+                  likesScore,
                   followsPoster,
                   followScore,
                   hashtagScore,
@@ -132,6 +133,7 @@ export default function PaidPromotionPage() {
                   recencyScore,
                   recencyDays,
                   paidPromotion: isPromoted === 'yes',
+                  paidScore,
                   score: finalScore,
                 },
               ];

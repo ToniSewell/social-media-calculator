@@ -26,13 +26,11 @@ export default function LikesPage() {
   const [weights, setWeights] = useState(initialWeights);
   const [weightsSet, setWeightsSet] = useState(Boolean(location.state?.weights));
   const [likesScore, setLikesScore] = useState(0);
-  const [likesRaw, setLikesRaw] = useState(0);
+  const [likesValue, setLikesValue] = useState(0);
   const [likesValid, setLikesValid] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [currentPost, setCurrentPost] = useState(initialPostNumber);
   const [postHistory, setPostHistory] = useState(initialPostHistory);
-
-  const finalScore = likesScore;
 
   useEffect(() => {
     setShowToast(likesValid);
@@ -55,35 +53,6 @@ export default function LikesPage() {
     setWeights((prev) => ({ ...prev, [factor]: Number(value) }));
   };
 
-  const scorePost = (item, weights) => {
-    if (
-      item.likes == null &&
-      item.followsPoster == null &&
-      item.hashtagsFollowed == null &&
-      item.followerLikes == null &&
-      item.recencyDays == null &&
-      item.paidPromotion == null
-    ) {
-      return item.score ?? 0;
-    }
-
-    const likes = item.likes ?? 0;
-    const followsPoster = item.followsPoster ? 1 : 0;
-    const hashtags = item.hashtagsFollowed ?? 0;
-    const followerLikes = item.followerLikes ?? 0;
-    const recency = item.recencyDays ?? 0;
-    const paid = item.paidPromotion ? weights.paid : 0;
-
-    return (
-      (weights.likes / 10) * likes +
-      (weights.followsPoster / 10) * followsPoster +
-      (weights.hashtags / 10) * hashtags +
-      (weights.followerLikes / 10) * followerLikes +
-      -(weights.recency / 10) * recency +
-      paid
-    );
-  };
-
   return (
     <PageLayout className="likes-page" sidebar={<HistoryRail postHistory={postHistory} weights={weights} />}>
       <div className="page-header">
@@ -102,6 +71,7 @@ export default function LikesPage() {
                 min="0"
                 max="10"
                 value={value}
+                onInput={(e) => updateWeight(factor, e.target.value)}
                 onChange={(e) => updateWeight(factor, e.target.value)}
               />
               <div>Importance: {value}/10</div>
@@ -118,9 +88,9 @@ export default function LikesPage() {
             <p>Using the saved weight: {weights.likes}/10 for likes.</p>
             <LikesCalculator
               weight={weights.likes}
-              onScoreChange={(score, valid, rawLikes) => {
+              onScoreChange={(score, valid, likesCount) => {
                 setLikesScore(score);
-                setLikesRaw(rawLikes);
+                setLikesValue(likesCount ?? 0);
                 setLikesValid(valid);
               }}
             />
@@ -152,6 +122,7 @@ export default function LikesPage() {
                 onClick={() =>
                   navigate('/follow-poster', {
                     state: {
+                      likes: likesValue,
                       likesScore,
                       weights,
                       postNumber: currentPost,

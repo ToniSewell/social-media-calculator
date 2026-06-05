@@ -15,21 +15,27 @@ export default function HistoryRail({ postHistory, weights }) {
       return item.score ?? 0;
     }
 
-    const likes = item.likes ?? 0;
-    const followsPoster = item.followsPoster ? 1 : 0;
-    const hashtags = item.hashtagsFollowed ?? 0;
-    const followerLikes = item.followerLikes ?? 0;
-    const recency = item.recencyDays ?? 0;
-    const paid = item.paidPromotion ? weights.paid : 0;
+    const hasRawInputs =
+      item.likes != null ||
+      item.followsPoster != null ||
+      item.hashtagsFollowed != null ||
+      item.followerLikes != null ||
+      item.recencyDays != null ||
+      item.paidPromotion != null;
 
-    return (
-      (weights.likes / 10) * likes +
-      (weights.followsPoster / 10) * followsPoster +
-      (weights.hashtags / 10) * hashtags +
-      (weights.followerLikes / 10) * followerLikes +
-      -(weights.recency / 10) * recency +
-      paid
-    );
+    if (hasRawInputs) {
+      const likesNormalizer = (n) => Math.log10(1 + n);
+      const likes = (weights.likes / 10) * likesNormalizer(item.likes ?? 0);
+      const followsPoster = (weights.followsPoster / 10) * (item.followsPoster ? 1 : 0);
+      const hashtags = (weights.hashtags / 10) * (item.hashtagsFollowed ?? 0);
+      const followerLikes = (weights.followerLikes / 10) * (item.followerLikes ?? 0);
+      const recency = -(weights.recency / 10) * (item.recencyDays ?? 0);
+      const paid = item.paidPromotion ? weights.paid : 0;
+
+      return likes + followsPoster + hashtags + followerLikes + recency + paid;
+    }
+
+    return item.score ?? 0;
   };
 
   return (
